@@ -30,12 +30,12 @@ for target in merge_dict:
 # build and execute commands to merge bams --------------------------------------------------------
 print("\n")
 print("Merging then indexing bam files...")
-log_file = open("mergebam.log", "w")
+log_file = open("mergebams.log", "w")
 cmd_list = [] # list of commands. each element is space-delimited list of actual cmd to run.
 for target in merge_dict:
 	in_files = " ".join(merge_dict[target])
 	out_file = "{}/{}".format(args.outdir, target)
-	cmd = "srun -c {p} /opt/installed/samtools-1.6/bin/samtools merge -f -@ {p} {o} {i}".format(p = args.cores, o = out_file, i = in_files)
+	cmd = "samtools merge -f -@ {p} {o} {i}".format(p = args.cores, o = out_file, i = in_files)
 	print("Making target file: ", out_file)
 	print(cmd, file = log_file)
 	cmd_list.append(cmd.split(" "))
@@ -45,11 +45,12 @@ procs = [ subprocess.Popen(i) for i in cmd_list ]
 for p in procs:
 	p.wait()
 
+log_file = open("mergebams.log", "a")
 # index merged bam files serially.
 print("BAM files merged, now indexing outputs")
 for target in merge_dict:
 	in_file = "{}/{}".format(args.outdir, target)
-	cmd = "srun -c {p} /opt/installed/samtools-1.6/bin/samtools index -@ {p} {i}".format(p = args.cores, i = in_file)
+	cmd = "samtools index -@ {p} {i}".format(p = args.cores, i = in_file)
 	print(cmd, file = log_file)
 	os.system(cmd)
 
@@ -60,7 +61,7 @@ cmd_list = []
 for target in merge_dict:
 	in_file = "{}/{}".format(args.outdir, target)
 	out_file = "{}/{}".format(args.outdir, target.replace(".bam", ".bw", 1))
-	cmd = "srun -c {p} bamCoverage -b {b} -o {o} -p {p} --normalizeUsing CPM --binSize 10 --smoothLength 50 -v".format(b = in_file, o = out_file, p = args.cores)
+	cmd = "bamCoverage -b {b} -o {o} -p {p} --normalizeUsing CPM --binSize 10 --smoothLength 50 -v".format(b = in_file, o = out_file, p = args.cores)
 	print("Making target bigwig: ", out_file)
 	print(cmd, file = log_file)
 	cmd_list.append(cmd.split(" "))
@@ -69,4 +70,5 @@ procs = [ subprocess.Popen(i) for i in cmd_list ]
 for p in procs:
 	p.wait()
 
+log_file.close()
 print("Bigwig files made. Program is finished")
