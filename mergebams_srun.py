@@ -35,12 +35,12 @@ cmd_list = [] # list of commands. each element is space-delimited list of actual
 for target in merge_dict:
 	in_files = " ".join(merge_dict[target])
 	out_file = "{}/{}".format(args.outdir, target)
-	cmd = "srun -c {p} samtools merge -f -@ {p} {o} {i}".format(p = args.cores, o = out_file, i = in_files)
+	cmd = "srun -c {p} samtools merge -f -@ {p} - {i} | samtools -@ {p} -o {o}".format(p = args.cores, o = out_file, i = in_files)
 	print("Making target file: ", out_file)
 	print(cmd, file = log_file)
 	cmd_list.append(cmd.split(" "))
 
-# run all process and wait for them all to finish.
+# merge bams and wait for all processes
 procs = [ subprocess.Popen(i) for i in cmd_list ]
 for p in procs:
 	p.wait()
