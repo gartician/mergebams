@@ -35,7 +35,7 @@ cmd_list = [] # list of commands. each element is space-delimited list of actual
 for target in merge_dict:
 	in_files = " ".join(merge_dict[target])
 	out_file = "{}/{}".format(args.outdir, target)
-	cmd = "srun -c {p} samtools merge -f -@ {p} - {i} | samtools -@ {p} -o {o}".format(p = args.cores, o = out_file, i = in_files)
+	cmd = "srun -c {p} /opt/installed/samtools-1.6/bin/samtools merge -f -@ {p} - {i} | samtools sort -@ {p} -o {o}".format(p = args.cores, o = out_file, i = in_files)
 	print("Making target file: ", out_file)
 	print(cmd, file = log_file)
 	cmd_list.append(cmd.split(" "))
@@ -46,11 +46,11 @@ for p in procs:
 	p.wait()
 
 log_file = open("mergebams.log", "a")
-# index merged bam files serially.
+# index merged bam files.
 print("BAM files merged, now indexing outputs")
 for target in merge_dict:
 	in_file = "{}/{}".format(args.outdir, target)
-	cmd = "srun -c {p} samtools index -@ {p} {i}".format(p = args.cores, i = in_file)
+	cmd = "srun -c {p} /opt/installed/samtools-1.6/bin/samtools index -@ {p} {i}".format(p = args.cores, i = in_file)
 	print(cmd, file = log_file)
 	os.system(cmd)
 
