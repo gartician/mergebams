@@ -19,18 +19,12 @@ bam merged_bam
 And then specify which flags to use. The following can be brought up `bash mergebams_srun.sh`:
 
 ```
-usage: mergebams.sh [-h] [-c CONFIG] [-p CORES] [-o OUTDIR]
+mergebams.sh - Merge many bam files and then generate bigwigs.
+USAGE: bash mergebams.sh -p <cores> -c <merge configuration> -o <output directory>
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -c CONFIG, --config CONFIG
-                        BAM file merging scheme
-  -p CORES, --cores CORES
-                        Number of cores to use (default = 4)
-  -o OUTDIR, --outdir OUTDIR
-                        Automatically creates and export merged bams + bigwigs
-                        to this directory (default is current working
-                        directory). Do not end this option with a '/'
+-p  Number of cores to use per merge process            [default = 4]
+-c  Configuration file for the merge                    [required]
+-o  Output directory for merged bam and bigwigs         [required]
 ```
 
 Please don't specify the output directory in the config file itself. Instead, use the `-o` flag!
