@@ -1,6 +1,6 @@
 # mergebam
 
-Use these scripts to merge multiple bam files and then generate bigwig tracks; this is appropriate to merge replicate samples into one file. Please use the `mergebams_srun.py` to submit jobs to a SLURM system for optimal performance, otherwise use the `mergebams.py`. 
+Use these scripts to merge multiple bam files and then generate bigwig tracks; this is appropriate to merge replicate samples into one file. Please use the `mergebams_srun.sh` to submit jobs to a SLURM system for optimal performance, otherwise use the `mergebams.sh`. 
 
 # Input
 
@@ -16,10 +16,10 @@ bam merged_bam
 /path/to/treated3.bam   treated_merged.bam
 ```
 
-And then specify which flags to use. The following can be brought up with the -h argument:
+And then specify which flags to use. The following can be brought up `bash mergebams_srun.sh`:
 
 ```
-usage: mergebams.py [-h] [-c CONFIG] [-p CORES] [-o OUTDIR]
+usage: mergebams.sh [-h] [-c CONFIG] [-p CORES] [-o OUTDIR]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -38,10 +38,8 @@ Please don't specify the output directory in the config file itself. Instead, us
 Example command:
 
 ```
-python mergebams_srun.py -c mergebams.config -p 20 -o merged_output
+bash mergebams_srun.sh -c mergebams.config -p 20 -o my_output
 ```
-
-
 
 # Output
 
@@ -51,20 +49,14 @@ The output of this script is replicate-merged bam file and the bigwig file. The 
 .
 ├── mergebam.log
 ├── mergebams.config
-├── mergebams.py
-└── merged
-    ├── ConditionA_merged.bam
-    ├── ConditionA_merged.bam.bai
-    ├── ConditionA_merged.bw
-    ├── ConditionB_merged.bam
-    ├── ConditionB_merged.bam.bai
-    ├── ConditionB_merged.bw
-    ├── ConditionC_merged.bam
-    ├── ConditionC_merged.bam.bai
-    ├── ConditionC_merged.bw
-    ├── ConditionD_merged.bam
-    ├── ConditionD_merged.bam.bai
-    └── ConditionD_merged.bw
+├── mergebams.sh
+└── my_output
+    ├── control_merged.bam
+    ├── control_merged.bam.bai
+    ├── control_merged.bw
+    ├── treated_merged.bam
+    ├── treated_merged.bam.bai
+    └── treated_merged.bw
 ```
 
 # Method
